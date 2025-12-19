@@ -1,181 +1,501 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>مدرستنا</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-<style>
-html, body { height: 100%; }
-body { font-family: 'Tajawal','Cairo','Segoe UI',sans-serif; margin: 0; background: #f7f7fb; color: #111; }
-.header { background: linear-gradient(135deg, #0ea5e9, #22c55e); color: #fff; padding: 24px; }
-.container { max-width: 1024px; margin: 0 auto; padding: 20px; }
-.title { font-size: 28px; font-weight: 700; }
-.subtitle { font-size: 16px; opacity: .9; }
-.section { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 16px; margin-top: 20px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
-.card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; background: #fafafa; transition: transform .15s ease, box-shadow .15s ease; }
-.card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
-.card a { text-decoration: none; color: #0f3d56; font-weight: 700; display: block; }
-.divider { height: 2px; background: linear-gradient(to left, #0ea5e9, #22c55e); opacity: .7; margin: 12px 0 16px; }
-.videos { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
-figure { margin: 0; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 10px; display: flex; flex-direction: column; }
-figcaption { margin-top: 10px; font-size: 15px; color: #134e4a; text-align: center; font-weight: 700; }
-video { width: 100%; border-radius: 10px; background: #000; display: block; aspect-ratio: 16 / 9; box-shadow: 0 4px 14px rgba(0,0,0,.08); transition: transform .2s ease, box-shadow .2s ease; }
-.videos figure:hover video { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0,.12); }
-.btn:hover { filter: brightness(1.05); transform: translateY(-1px); transition: transform .15s ease, filter .15s ease; }
-.placeholder { display:flex; align-items:center; justify-content:center; height:180px; border:1px dashed #f59e0b; border-radius:12px; background:#fff7ed; color:#78350f; font-weight:700; }
-.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
-.btn { display: inline-block; padding: 10px 14px; border-radius: 10px; font-weight: 700; text-decoration: none; }
-.btn.primary { background: #0ea5e9; color: #fff; }
-.btn.secondary { background: #22c55e; color: #fff; }
-.footer { text-align: center; font-size: 14px; color: #556; margin: 22px 0; }
-details { border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #fff; }
-summary { cursor: pointer; font-weight: 700; color: #0f3d56; }
-#technology, #videos { scroll-margin-top: 24px; }
-.hidden { display: none; }
-.technology.videos-only .non-videos { display: none; }
-.technology.videos-only .watch-videos { display: none; }
-</style>
-</head>
-<body>
-  <header class="header">
-    <div class="container">
-      <div class="title">مدرستنا</div>
-      <div class="subtitle">ادرس بلا ملل واختبر بلا كلل</div>
-    </div>
-  </header>
 
-  <main class="container">
-    <section class="section" id="subjects">
-      <h2>قائمة المواد</h2>
-      <div class="divider"></div>
-      <div class="grid">
-        <div class="card">
-          <a href="#technology" aria-label="الذهاب إلى قسم تكنولوجيا">تكنولوجيا</a>
-          <div style="font-size:13px; color:#556;">ملخصات فيديو + ملخص المنهج</div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مدرسة الإيمان والمعرفة - منصة تعليمية ذكية</title>
+  <!-- Tailwind v2.2.19 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js"></script>
+  <style>
+    :root {
+      --primary: #8b5cf6;
+      --primary-dark: #7c3aed;
+      --secondary: #ec4899;
+      --accent: #10b981;
+      --bg-light: #f3f4f6;
+      --text-dark: #1f2937;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #f0fdfa 0%, #f3f4f6 100%);
+      color: var(--text-dark);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .sidebar-item {
+      transition: all 0.2s;
+    }
+
+    .sidebar-item:hover {
+      background-color: #f3f4f6;
+    }
+
+    .sidebar-item.active {
+      background-color: #eef2ff;
+      color: var(--primary);
+      border-right: 3px solid var(--primary);
+    }
+
+    .submenu-item {
+      transition: all 0.2s;
+    }
+
+    .submenu-item:hover {
+      background-color: #f9fafb;
+      color: var(--secondary);
+    }
+
+    .submenu-item.active {
+      background-color: #fce7f3;
+      color: var(--secondary);
+      font-weight: bold;
+    }
+
+    .video-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .video-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 3px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .file-card {
+      transition: all 0.2s;
+    }
+
+    .file-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .submenu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .submenu.open {
+      max-height: 500px;
+      transition: max-height 0.3s ease-in;
+    }
+
+    /* Sidebar Transition */
+    aside {
+      transition: width 0.3s ease-in-out, padding 0.3s ease-in-out;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50">
+
+  <!-- Navbar -->
+  <nav class="glass-panel h-16 flex-shrink-0 z-50 px-6 flex items-center justify-between shadow-sm">
+    <div class="flex items-center gap-3">
+      <!-- Sidebar Toggle Button (Navbar - Opener/Toggler) -->
+      <button onclick="toggleSidebar()"
+        class="p-2 rounded-full hover:bg-gray-100 transition-colors focus:outline-none text-gray-600"
+        title="إظهار/إخفاء القائمة">
+        <svg id="navbarToggleIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+
+      <div
+        class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center text-white font-bold text-xl shadow-lg">
+        IM
+      </div>
+      <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
+        مدرسة الإيمان والمعرفة
+      </span>
+    </div>
+    <div class="flex items-center gap-4">
+      <div
+        class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold border border-purple-200">
+        A
+      </div>
+    </div>
+  </nav>
+
+  <!-- App Layout -->
+  <div class="flex flex-grow overflow-hidden relative">
+
+    <!-- Right Sidebar (Grades) -->
+    <aside id="mainSidebar"
+      class="w-72 bg-white border-l border-gray-200 flex flex-col shadow-lg z-20 h-full overflow-hidden flex-shrink-0">
+      <div
+        class="p-4 border-b border-gray-100 bg-gray-50 flex-shrink-0 flex justify-between items-center whitespace-nowrap overflow-hidden">
+        <h2 class="font-bold text-gray-700 flex items-center gap-2">
+          <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
+          </svg>
+          المراحل الدراسية
+        </h2>
+        <!-- Close Button -->
+        <button onclick="toggleSidebar()"
+          class="p-1 rounded-full hover:bg-gray-200 text-gray-500 transition-colors focus:outline-none"
+          title="إخفاء القائمة">
+          <svg class="w-5 h-5 transform rotate-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="flex-grow overflow-y-auto custom-scrollbar p-2 space-y-2 whitespace-nowrap" id="sidebarContent">
+        <!-- Dynamic Content -->
+      </div>
+    </aside>
+
+    <!-- Main Content (Left) -->
+    <main
+      class="flex-grow bg-gray-100 overflow-y-auto custom-scrollbar p-6 md:p-10 relative transition-all duration-300">
+      <div class="absolute inset-0 z-0 opacity-5 pointer-events-none"
+        style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%239C92AC\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
+      </div>
+
+      <div id="welcomeState" class="flex flex-col items-center justify-center h-full text-center text-gray-500">
+        <div class="w-24 h-24 bg-purple-100 rounded-full flex items-center justify-center mb-6 animate-bounce">
+          <svg class="w-12 h-12 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-800 mb-2">مرحباً بك في منصة الإيمان والمعرفة</h1>
+        <p>اختر الصف والمادة من القائمة الجانبية لعرض المحتوى</p>
+      </div>
+
+      <div id="contentArea" class="hidden relative z-10">
+        <header class="flex items-center justify-between mb-8 pb-4 border-b border-gray-200">
+          <div>
+            <div class="flex items-center gap-2 text-sm text-gray-500 mb-1">
+              <span id="breadcrumbGrade"></span>
+              <svg class="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+              <span class="text-purple-600 font-semibold" id="breadcrumbSubject"></span>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800" id="currentSubjectTitle"></h1>
+          </div>
+        </header>
+
+        <!-- PDF Summaries Section -->
+        <div class="mb-12" id="pdfSection">
+          <h3 class="text-lg font-bold text-gray-700 mb-4 flex items-center gap-2">
+            <span class="p-1.5 bg-red-100 text-red-500 rounded-lg">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                </path>
+              </svg>
+            </span>
+            ملخصات PDF
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="pdfContainer">
+            <!-- Dynamic PDFs -->
+          </div>
+        </div>
+
+        <!-- Videos Section -->
+        <div>
+          <h3 class="text-lg font-bold text-gray-700 mb-4 flex items-center gap-2">
+            <span class="p-1.5 bg-purple-100 text-purple-600 rounded-lg">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z">
+                </path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </span>
+            شرح الفيديو
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6" id="videoContainer">
+            <!-- Dynamic Videos -->
+          </div>
         </div>
       </div>
-    </section>
+    </main>
+  </div>
 
-    <section class="section hidden technology" id="technology">
-      <h2>تكنولوجيا</h2>
-      <div class="divider"></div>
-      <div class="actions">
-        <a class="btn primary watch-videos" href="#videos">مشاهدة ملخصات الفيديو</a>
-        <a class="btn secondary non-videos" href="ملخص_المنهج_الذكي_لتكنولوجيا_المعلومات.pdf" target="_blank" rel="noopener">فتح ملخص المنهج</a>
-        <a class="btn back-tech" href="#technology" style="background:#475569; color:#fff;">رجوع لقسم التكنولوجيا</a>
-        <a class="btn" href="#subjects" style="background:#0f3d56; color:#fff;">رجوع للقائمة الرئيسية</a>
+  <!-- PDF Viewer Modal -->
+  <div id="pdfModal" class="fixed inset-0 hidden" style="z-index: 9999;">
+    <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm transition-opacity"
+      onclick="closePDF()"></div>
+    <div
+      class="absolute inset-4 md:inset-10 bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200">
+      <div class="flex justify-between items-center p-4 border-b bg-gray-50">
+        <h3 class="font-bold text-lg text-gray-800" id="pdfModalTitle">View PDF</h3>
+        <button onclick="closePDF()" class="p-2 hover:bg-gray-200 rounded-lg transition-colors text-gray-500">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
       </div>
+      <iframe id="pdfFrame" class="flex-grow w-full h-full border-0 bg-gray-100"></iframe>
+    </div>
+  </div>
 
-      <div style="margin-top:16px">
-        <details class="non-videos">
-          <summary>عرض الملخص داخل الصفحة</summary>
-          <div style="margin-top:10px; height: 70vh;">
-            <iframe title="ملخص المنهج" src="ملخص_المنهج_الذكي_لتكنولوجيا_المعلومات.pdf" style="width:100%; height:100%; border:1px solid #e5e7eb; border-radius:12px;"></iframe>
-          </div>
-        </details>
-      </div>
-
-      <div style="margin-top:16px">
-        <details class="non-videos">
-          <summary>عرض الكتاب (PDF) داخل الصفحة</summary>
-          <div style="margin-top:10px; height: 70vh;">
-            <iframe title="الكتاب PDF" src="الفائز - تكنولوجيا المعلومات - 2 اعدادي - ترم 1 - ذاكرولي.pdf" style="width:100%; height:100%; border:1px solid #e5e7eb; border-radius:12px;"></iframe>
-          </div>
-        </details>
-      </div>
-
-      <h3 id="videos" class="hidden" style="margin-top:18px;">ملخصات الفيديو لكل درس</h3>
-      <div class="videos hidden">
-        <figure>
-          <video controls preload="metadata" src="الأنظمة_الذكية_وتأثيرها_على_تغير_المناخ.mp4"></video>
-          <figcaption>الأنظمة الذكية وتأثيرها على تغير المناخ</figcaption>
-        </figure>
-        <figure>
-          <video controls preload="metadata" src="التهديدات_السيبرانية_المتقدمة.mp4"></video>
-          <figcaption>التهديدات السيبرانية المتقدمة</figcaption>
-        </figure>
-        <figure>
-          <video controls preload="metadata" src="بيانات_ضخمة_وذكاء_اصطناعي.mp4"></video>
-          <figcaption>البيانات الضخمة والذكاء الاصطناعي</figcaption>
-        </figure>
-        <figure>
-          <video controls preload="metadata" src="ملخص_البيانات_الضخمة.mp4"></video>
-          <figcaption>ملخص البيانات الضخمة</figcaption>
-        </figure>
-        <figure>
-          <video controls preload="metadata" src="مبادئ_تصميم_المواقع_الرائعة.mp4"></video>
-          <figcaption>مبادئ تصميم المواقع الرائعة</figcaption>
-        </figure>
-        <figure>
-          <video controls preload="metadata" src="تنسيق_صفحات_الويب_بـ_CSS.mp4"></video>
-          <figcaption>تنسيق صفحات الويب بـ CSS</figcaption>
-        </figure>
-        <figure>
-          <video controls preload="metadata" src="مشروعي_الرقمي_المدرسي.mp4"></video>
-          <figcaption>مشروعي الرقمي المدرسي</figcaption>
-        </figure>
-        <figure>
-          <video controls preload="metadata" src="إنشاء_موقع_بالذكاء_الاصطناعي.mp4"></video>
-          <figcaption>إنشاء موقع بالذكاء الاصطناعي</figcaption>
-        </figure>
-      </div>
-
-      <div class="actions non-videos" style="margin-top:18px">
-        <a class="btn" href="الفائز - تكنولوجيا المعلومات - 2 اعدادي - ترم 1 - ذاكرولي.pdf" target="_blank" rel="noopener" style="background:#f59e0b; color:#fff;">تحميل مرجع إضافي (PDF)</a>
-      </div>
-    </section>
-
-    <div class="footer">© مدرستنا — منشئ الموقع: مالك محمد</div>
-  </main>
   <script>
-    (function() {
-      function renderView() {
-        var hash = window.location.hash || '';
-        var subjects = document.getElementById('subjects');
-        var technology = document.getElementById('technology');
-        if (hash === '#technology' || hash === '#videos') {
-          subjects.classList.add('hidden');
-          technology.classList.remove('hidden');
-          var targetId = hash.slice(1);
-          var targetEl = document.getElementById(targetId);
-          var videosHeader = document.getElementById('videos');
-          var videosList = technology.querySelector('.videos');
-          var backTech = technology.querySelector('.back-tech');
-          if (hash === '#videos') {
-            if (videosHeader) videosHeader.classList.remove('hidden');
-            if (videosList) videosList.classList.remove('hidden');
-            technology.classList.add('videos-only');
-            targetEl = videosHeader || technology;
-            if (backTech) backTech.classList.remove('hidden');
-          } else {
-            if (videosHeader) videosHeader.classList.add('hidden');
-            if (videosList) videosList.classList.add('hidden');
-            technology.classList.remove('videos-only');
-            if (backTech) backTech.classList.add('hidden');
+    // Data Structure (Preserved)
+    const curriculumData = {
+      '4': { name: "الرابع الابتدائي", subjects: [] },
+      '5': { name: "الخامس الابتدائي", subjects: [] },
+      '6': { name: "السادس الابتدائي", subjects: [] },
+      '7': { name: "الأول الإعدادي", subjects: [] },
+      '8': {
+        name: "الثاني الإعدادي",
+        subjects: [
+          {
+            id: 'tech',
+            name: 'تكنولوجيا المعلومات',
+            icon: '💻',
+            videos: [
+              { title: 'إنشاء موقع بالذكاء الاصطناعي', file: 'إنشاء_موقع_بالذكاء_الاصطناعي.mp4', summary: null },
+              { title: 'الأنظمة الذكية وتأثيرها على تغير المناخ', file: 'الأنظمة_الذكية_وتأثيرها_على_تغير_المناخ.mp4', summary: null },
+              { title: 'التهديدات السيبرانية المتقدمة', file: 'التهديدات_السيبرانية_المتقدمة.mp4', summary: null },
+              { title: 'بيانات ضخمة وذكاء اصطناعي', file: 'بيانات_ضخمة_وذكاء_اصطناعي.mp4', summary: null },
+              { title: 'تنسيق صفحات الويب بـ CSS', file: 'تنسيق_صفحات_الويب_بـ_CSS.mp4', summary: null },
+              { title: 'مبادئ تصميم المواقع الرائعة', file: 'مبادئ_تصميم_المواقع_الرائعة.mp4', summary: null },
+              { title: 'مشروعي الرقمي المدرسي', file: 'مشروعي_الرقمي_المدرسي.mp4', summary: null },
+              { title: 'ملخص البيانات الضخمة', file: 'ملخص_البيانات_الضخمة.mp4', summary: 'ملخص_المنهج_الذكي_لتكنولوجيا_المعلومات.pdf' }
+            ],
+            pdfs: [
+              { title: 'ملخص المنهج الذكي', file: 'ملخص_المنهج_الذكي_لتكنولوجيا_المعلومات.pdf' }
+            ]
+          },
+          {
+            id: 'social',
+            name: 'الدراسات',
+            icon: '🌍',
+            videos: [
+              { title: 'جغرافيا أوراسيا: قارة واحدة، عالمان', file: 'جغرافيا_أوراسيا__قارة_واحدة،_عالمان.mp4', summary: null },
+              { title: 'المعادن: محركات آسيا وأوروبا', file: 'المعادن__محركات_آسيا_وأوروبا.mp4', summary: null },
+              { title: 'معادلة الطاقة: وقود آسيا وأوروبا', file: 'معادلة_الطاقة__وقود_آسيا_وأوروبا.mp4', summary: null },
+              { title: 'بناء بلاد ما بين النهرين', file: 'بناء_بلاد_ما_بين_النهرين.mp4', summary: null },
+              { title: 'الفينيقيون: أسياد البحر', file: 'الفينيقيون__أسياد_البحار.mp4', summary: null },
+              { title: 'ممالك اليمن القديمة: قوة منسية', file: 'ممالك_اليمن_القديمة__قوة_منسية.mp4', summary: null },
+              { title: 'عمالقة الشرق القديم: الهند والصين', file: 'عمالقة_الشرق_القديم__الهند_والصين.mp4', summary: null },
+              { title: 'الحضارة الإسلامية: قوة عالمية', file: 'الحضارة_الإسلامية__قوة_عالمية.mp4', summary: null },
+              { title: 'نظام آسيا وأوروبا البيئي', file: 'نظم_آسيا_وأوروبا_البيئية.mp4', summary: null },
+              { title: 'نظام الحشائش بآسيا وأوروبا', file: 'نظم_الحشائش_بآسيا_وأوروبا.mp4', summary: null },
+              { title: 'النظم البيئية المائية في آسيا وأوروبا', file: 'النظم_البيئية_المائية_في_آسيا_وأوروبا.mp4', summary: null },
+              { title: 'فراعنة مصر اليونانيون', file: 'فراعنة_مصر_اليونانيون.mp4', summary: null },
+              { title: 'الحضارة الرومانية في مصر', file: 'الحضارة_الرومانية_في_مصر.mp4', summary: null }
+            ],
+            pdfs: []
           }
-          if (targetEl) {
-            targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
+        ]
+      },
+      '9': { name: "الثالث الإعدادي", subjects: [] }
+    };
+
+    // UI Generation Logic
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSidebar();
+    });
+
+    function renderSidebar() {
+      const container = document.getElementById('sidebarContent');
+      container.innerHTML = '';
+
+      Object.keys(curriculumData).forEach(gradeId => {
+        const grade = curriculumData[gradeId];
+
+        const gradeItem = document.createElement('div');
+
+        const button = document.createElement('button');
+        button.className = 'sidebar-item w-full flex items-center justify-between p-3 rounded-lg text-gray-700 font-semibold focus:outline-none';
+        button.onclick = () => toggleGrade(gradeId);
+        button.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm bg-purple-100 text-purple-700 px-2 py-0.5 rounded text-xs font-bold">${gradeId}</span>
+                        ${grade.name}
+                    </div>
+                    <svg id="chevron-${gradeId}" class="w-4 h-4 transition-transform text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                `;
+
+        const submenu = document.createElement('div');
+        submenu.id = `submenu-${gradeId}`;
+        submenu.className = 'submenu bg-gray-50 rounded-b-lg mb-1';
+
+        if (grade.subjects && grade.subjects.length > 0) {
+          grade.subjects.forEach(subject => {
+            const subBtn = document.createElement('button');
+            subBtn.className = 'submenu-item w-full text-right pr-10 pl-4 py-2 text-sm text-gray-600 hover:text-purple-600 flex items-center gap-2';
+            subBtn.onclick = (e) => {
+              e.stopPropagation();
+              selectSubject(gradeId, subject.id);
+            };
+            subBtn.innerHTML = `
+                            <span>${subject.icon || '•'}</span>
+                            ${subject.name}
+                        `;
+            submenu.appendChild(subBtn);
+          });
         } else {
-          subjects.classList.remove('hidden');
-          technology.classList.add('hidden');
-          technology.classList.remove('videos-only');
-          var backTech2 = technology.querySelector('.back-tech');
-          if (backTech2) backTech2.classList.add('hidden');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          const empty = document.createElement('div');
+          empty.className = 'text-xs text-gray-400 pr-10 py-2 italic';
+          empty.innerText = 'لا توجد مواد متاحة';
+          submenu.appendChild(empty);
         }
-      }
-      window.addEventListener('hashchange', renderView);
-      var links = document.querySelectorAll('a[href^="#"]');
-      links.forEach(function(a) {
-        a.addEventListener('click', function() {
-          setTimeout(renderView, 0);
-        });
+
+        gradeItem.appendChild(button);
+        gradeItem.appendChild(submenu);
+        container.appendChild(gradeItem);
       });
-      renderView();
-    })();
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('mainSidebar');
+      // Check current width state
+      const isClosed = sidebar.classList.contains('w-0');
+
+      if (isClosed) {
+        // OPEN
+        sidebar.classList.remove('w-0', 'p-0');
+        sidebar.classList.add('w-72');
+      } else {
+        // CLOSE
+        sidebar.classList.remove('w-72');
+        sidebar.classList.add('w-0', 'p-0');
+      }
+    } function toggleGrade(gradeId) {
+      const submenu = document.getElementById(`submenu-${gradeId}`);
+      const chevron = document.getElementById(`chevron-${gradeId}`);
+
+      if (submenu.classList.contains('open')) {
+        submenu.classList.remove('open');
+        chevron.classList.remove('rotate-180');
+      } else {
+        submenu.classList.add('open');
+        chevron.classList.add('rotate-180');
+      }
+    }
+
+    function selectSubject(gradeId, subjectId) {
+      const grade = curriculumData[gradeId];
+      const subject = grade.subjects.find(s => s.id === subjectId);
+
+      if (!subject) return;
+
+      document.querySelectorAll('.submenu-item').forEach(el => el.classList.remove('active'));
+      const activeBtn = Array.from(document.querySelectorAll('.submenu-item')).find(el => el.innerHTML.includes(subject.name));
+      if (activeBtn) activeBtn.classList.add('active');
+
+      document.getElementById('welcomeState').classList.add('hidden');
+      document.getElementById('contentArea').classList.remove('hidden');
+
+      document.getElementById('breadcrumbGrade').innerText = grade.name;
+      document.getElementById('breadcrumbSubject').innerText = subject.name;
+      document.getElementById('currentSubjectTitle').innerText = subject.name;
+
+      renderPDFs(subject.pdfs || []);
+      renderVideos(subject.videos);
+    }
+
+    function renderPDFs(pdfs) {
+      const container = document.getElementById('pdfContainer');
+      container.innerHTML = '';
+      const section = document.getElementById('pdfSection');
+
+      if (!pdfs || pdfs.length === 0) {
+        container.innerHTML = '<div class="col-span-full text-center text-gray-400 py-4 border border-dashed border-gray-200 rounded-xl">لا توجد ملخصات متاحه حالياً لهذا المقرر</div>';
+        return;
+      }
+
+      pdfs.forEach(pdf => {
+        const card = document.createElement('div');
+        card.onclick = () => openPDF(pdf.file, pdf.title);
+        card.className = 'file-card bg-white p-4 rounded-xl border border-gray-100 cursor-pointer flex items-center gap-3 shadow-sm hover:shadow-md group h-full';
+        card.innerHTML = `
+                    <div class="w-12 h-12 rounded-lg bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0 group-hover:bg-red-500 group-hover:text-white transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    </div>
+                    <div class="flex-grow min-w-0">
+                        <div class="font-bold text-gray-800 text-sm truncate" title="${pdf.title}">${pdf.title}</div>
+                        <div class="text-xs text-gray-400 mt-1">اضغط للعرض</div>
+                    </div>
+                `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderVideos(videos) {
+      const container = document.getElementById('videoContainer');
+      container.innerHTML = '';
+
+      videos.forEach(video => {
+        const card = document.createElement('div');
+        card.className = 'video-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm group flex flex-col';
+        card.innerHTML = `
+                    <div class="relative aspect-video bg-gray-900 group-hover:opacity-90 transition-opacity cursor-pointer">
+                        <video src="${video.file}" class="w-full h-full object-cover" controls preload="metadata"></video>
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        </div>
+                    </div>
+                    <div class="p-4 flex flex-col flex-grow">
+                        <h3 class="font-bold text-gray-800 mb-2 line-clamp-2 text-sm leading-relaxed" title="${video.title}">${video.title}</h3>
+                        <div class="mt-auto pt-4 flex items-center justify-between border-t border-gray-50">
+                            <button class="text-xs text-gray-400 hover:text-purple-600 flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
+                                حفظ
+                            </button>
+                            ${video.summary ? `
+                                <button onclick="openPDF('${video.summary}', '${video.title} - ملخص')" class="text-xs font-semibold text-purple-600 bg-purple-50 px-2 py-1 rounded hover:bg-purple-100 transition-colors">
+                                    ملخص الدرس
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+        container.appendChild(card);
+      });
+    }
+
+    function openPDF(url, title) {
+      const frame = document.getElementById('pdfFrame');
+      const modal = document.getElementById('pdfModal');
+      const modalTitle = document.getElementById('pdfModalTitle');
+      frame.src = url;
+      modalTitle.innerText = title;
+      modal.classList.remove('hidden');
+    }
+
+    function closePDF() {
+      document.getElementById('pdfModal').classList.add('hidden');
+      document.getElementById('pdfFrame').src = '';
+    }
   </script>
 </body>
+
 </html>
