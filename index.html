@@ -331,6 +331,15 @@
             pdfs: [
               { title: 'الجمال والإيمان والفن الإسلامي', file: 'beauty_belief_and_islamic_art.pdf' }
             ]
+          },
+          {
+            id: 'arabic',
+            name: 'اللغة العربية',
+            icon: '📜',
+            videos: [],
+            pdfs: [
+              { title: 'بناء البلاغة أساس النحو', file: 'بناء_البلاغة_أساس_النحو.pdf' }
+            ]
           }
         ]
       },
@@ -471,6 +480,11 @@
     function renderVideos(videos) {
       const container = document.getElementById('videoContainer');
       container.innerHTML = '';
+
+      if (!videos || videos.length === 0) {
+        container.innerHTML = '<div class="col-span-full text-center text-gray-400 py-10 border border-dashed border-gray-200 rounded-xl">لا توجد أي فيديوهات</div>';
+        return;
+      }
 
       videos.forEach(video => {
         const card = document.createElement('div');
